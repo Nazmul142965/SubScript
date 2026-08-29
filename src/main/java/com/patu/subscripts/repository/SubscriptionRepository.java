@@ -1,5 +1,6 @@
-package com.patu.subscripts;
+package com.patu.subscripts.repository;
 
+import com.patu.subscripts.model.Subscription;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.patu.subscripts;
+package com.patu.subscripts.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;

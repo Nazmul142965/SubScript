@@ -1,5 +1,8 @@
-package com.patu.subscripts;
+package com.patu.subscripts.controller;
 
+import com.patu.subscripts.services.SubscriptionService;
+import com.patu.subscripts.model.Subscription;
+import com.patu.subscripts.repository.SubscriptionRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

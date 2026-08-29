@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SubScript | Create Account</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .register-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 480px; }
+        .btn-success { background-color: #10b981; border: none; border-radius: 12px; padding: 12px; transition: 0.3s; }
+        .btn-success:hover { background-color: #059669; transform: translateY(-2px); }
+        .text-danger { font-size: 0.8rem; margin-top: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="register-card">
+    <h3 class="fw-bold text-center mb-2">Create Account</h3>
+    <p class="text-muted text-center small mb-4">Join SubScript to manage your expenses</p>
+
+    <!-- th:object="${userDto}" কন্ট্রোলারের পাঠানো মডেলের সাথে কানেক্ট করবে -->
+    <form th:action="@{/register}" th:object="${userDto}" method="post">
+
+        <!-- জেনারেল এরর মেসেজ (যেমন: পাসওয়ার্ড না মিললে) -->
+        <div th:if="${error}" class="alert alert-danger p-2 small text-center" th:text="${error}"></div>
+
+        <div class="mb-3">
+            <label class="form-label small fw-bold">Username</label>
+            <input type="text" th:field="*{username}" class="form-control" placeholder="nazmul_99">
+            <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label small fw-bold">Email Address</label>
+            <input type="email" th:field="*{email}" class="form-control" placeholder="nazmul@example.com">
+            <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label small fw-bold">Password</label>
+                <input type="password" th:field="*{password}" class="form-control" placeholder="••••••••">
+                <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <!-- এই সেই confirmPassword বক্স -->
+                <label class="form-label small fw-bold">Confirm Password</label>
+                <input type="password" th:field="*{confirmPassword}" class="form-control" placeholder="••••••••">
+                <div class="text-danger" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col">
+                <label class="form-label small fw-bold">City</label>
+                <input type="text" th:field="*{city}" class="form-control" placeholder="Dhaka">
+            </div>
+            <div class="col">
+                <label class="form-label small fw-bold">Country</label>
+                <input type="text" th:field="*{country}" class="form-control" placeholder="Bangladesh">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100 fw-bold">Register Now</button>
+    </form>
+
+    <div class="mt-4 text-center">
+        <p class="small text-muted">Already have an account? <a th:href="@{/login}" class="text-primary fw-bold">Login</a></p>
+    </div>
+</div>
+
+</body>
+</html>

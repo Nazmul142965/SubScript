@@ -1,6 +1,8 @@
-package com.patu.subscripts;
+package com.patu.subscripts.services;
 
 
+import com.patu.subscripts.model.Subscription;
+import com.patu.subscripts.repository.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.*;
