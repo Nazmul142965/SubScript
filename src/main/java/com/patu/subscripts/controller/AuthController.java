@@ -1,4 +1,4 @@
-package com.patu.subscripts;
+package com.patu.subscripts.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
