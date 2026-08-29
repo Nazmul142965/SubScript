@@ -67,6 +67,16 @@
     <div class="mt-4 text-center">
         <p class="small text-muted">Already have an account? <a th:href="@{/login}" class="text-primary fw-bold">Login</a></p>
     </div>
+
+    <!-- রেজিস্ট্রেশন সফল হলে এই সবুজ বক্সটি দেখাবে -->
+    <div th:if="${param.success}" class="alert alert-success text-center small">
+        Registration successful! Please login with your email.
+    </div>
+
+    <!-- আগে থেকে থাকা এরর মেসেজ (যদি লগইন ভুল হয়) -->
+    <div th:if="${param.error}" class="alert alert-danger text-center small">
+        Invalid email or password.
+    </div>
 </div>
 
 </body>

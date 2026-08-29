@@ -1,6 +1,6 @@
 package com.patu.subscripts.repository;
 
-import org.apache.catalina.User;
+import com.patu.subscripts.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
