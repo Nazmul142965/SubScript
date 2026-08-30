@@ -1,5 +1,7 @@
 package com.patu.subscripts.controller;
 
+import com.patu.subscripts.model.User;
+import com.patu.subscripts.repository.UserRepository;
 import com.patu.subscripts.services.SubscriptionService;
 import com.patu.subscripts.model.Subscription;
 import com.patu.subscripts.repository.SubscriptionRepository;
@@ -10,20 +12,40 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class SubscriptionController {
     private final SubscriptionService service;
     private final SubscriptionRepository subscriptionRepository;
+    private final UserRepository userRepository;
 
     @GetMapping("/")
-    public String dashboard(Model model) {
-        model.addAttribute("subscriptions", service.getAll());
-        model.addAttribute("totalMonthly", service.calculateTotalBurn());
-        model.addAttribute("categoryTotals", service.getCategoryTotals());
+    public String dashboard(Model model, Principal principal) {
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email).get();
+
+        List<Subscription> subList;
+
+        if (user.getRole().equals("ROLE_ADMIN")) {
+            subList = service.getAll();
+            model.addAttribute("isAdmin", true);
+            model.addAttribute("totalUsers", userRepository.count());
+        } else {
+            subList = subscriptionRepository.findAllByUser(user);
+            model.addAttribute("isAdmin", false);
+        }
+
+        model.addAttribute("subscriptions", subList);
+        model.addAttribute("username", user.getUsername());
+
+        //model.addAttribute("totalMonthly", service.calculateTotalForList(subList));
+        //model.addAttribute("categoryTotals", service.getCategoryTotalsForList(subList));
+
         return "dashboard";
     }
-
     @GetMapping("/add")
     public String addForm(Model model) {
         model.addAttribute("subscription", new Subscription());

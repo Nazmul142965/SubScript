@@ -1,148 +1,188 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>SubScript Pro | Dashboard</title>
-    <!-- Google Fonts & Bootstrap Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Modern Font and Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        :root { --primary-color: #6366f1; --bg-color: #f8fafc; }
-        body { background-color: var(--bg-color); font-family: 'Plus Jakarta Sans', sans-serif; color: #1e293b; }
+        body {
+            background-color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+            color: #111827;
+        }
+
+        /* Navbar Styling */
+        .navbar-custom { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 1rem 2rem; }
+        .nav-btn { font-weight: 500; color: #4b5563; padding: 8px 16px; border-radius: 10px; transition: 0.2s; text-decoration: none; }
+        .nav-btn:hover { background: #f9fafb; color: #6366f1; }
 
         /* Modern Cards */
-        .glass-card {
-            background: white; border: 1px solid rgba(226, 232, 240, 0.8);
-            border-radius: 20px; shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
+        .card-custom {
+            background: #ffffff; border: none; border-radius: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            padding: 24px; height: 100%;
         }
-        .stat-card { border-left: 5px solid var(--primary-color); }
-        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
 
-        /* Custom Table */
-        .table thead th { background: #f1f5f9; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; color: #64748b; border: none; }
-        .table tbody tr { border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
 
-        /* Status Badges */
-        .badge-active { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
-        .badge-paused { background-color: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+        /* Timeline Scroll */
+        .timeline-scroll { max-height: 400px; overflow-y: auto; scrollbar-width: thin; }
+        .timeline-item { border-left: 2px solid #e5e7eb; position: relative; padding-left: 24px; padding-bottom: 20px; }
+        .timeline-item::before { content: ""; width: 12px; height: 12px; background: #6366f1; border-radius: 50%; position: absolute; left: -7px; top: 4px; }
 
-        /* Sidebar Simulation */
-        .nav-link-custom { color: #64748b; font-weight: 600; padding: 10px 20px; border-radius: 12px; transition: 0.2s; }
-        .nav-link-custom:hover { background: #eef2ff; color: var(--primary-color); }
-        .active-link { background: var(--primary-color) !important; color: white !important; }
+        /* Table Style */
+        .table-custom { border-collapse: separate; border-spacing: 0 12px; }
+        .table-custom tr { background: white; transition: 0.2s; }
+        .table-custom tr:hover { background: #f9fafb; }
+        .table-custom td { padding: 16px; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9; }
+        .table-custom td:first-child { border-left: 1px solid #f1f5f9; border-radius: 16px 0 0 16px; }
+        .table-custom td:last-child { border-right: 1px solid #f1f5f9; border-radius: 0 16px 16px 0; }
+
+        .badge-active { background: #dcfce7; color: #166534; font-weight: 600; padding: 6px 12px; border-radius: 8px; }
     </style>
 </head>
 <body>
 
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar Navigation -->
-        <div class="col-md-2 bg-white min-vh-100 border-end d-none d-md-block p-4">
-            <h4 class="fw-bold text-primary mb-5"><i class="bi bi-wallet2 me-2"></i>SubScript</h4>
-            <div class="nav flex-column gap-2">
-                <a href="/" class="nav-link-custom active-link"><i class="bi bi-grid-1x2-fill me-2"></i> Dashboard</a>
-                <a href="/timeline" class="nav-link-custom"><i class="bi bi-calendar3 me-2"></i> Timeline</a>
-                <a href="/add" class="nav-link-custom"><i class="bi bi-plus-circle me-2"></i> New Entry</a>
+<!-- Top Navigation -->
+<nav class="navbar navbar-custom sticky-top mb-4">
+    <div class="container-fluid">
+        <span class="navbar-brand fw-bold text-primary fs-3"><i class="bi bi-intersect me-2"></i>SubScript</span>
+        <div class="d-flex align-items-center gap-3">
+            <a href="/" class="nav-btn"><i class="bi bi-house-door me-1"></i> Dashboard</a>
+            <a th:if="${isAdmin}" href="/admin/users" class="nav-btn text-danger"><i class="bi bi-people me-1"></i> Users</a>
+
+            <form th:action="@{/logout}" method="post" class="m-0">
+                <button type="submit" class="btn btn-light rounded-pill px-4 border">Logout</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid px-lg-5">
+    <!-- Greeting & Quick Action -->
+    <div class="row mb-5 align-items-center">
+        <div class="col-md-8">
+            <h2 class="fw-bold m-0">Hello, <span th:text="${username}">User</span>! 👋</h2>
+            <p class="text-muted m-0">Here's what's happening with your subscriptions.</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a href="/add" class="btn btn-primary btn-lg rounded-pill shadow-sm px-4">
+                <i class="bi bi-plus-lg me-2"></i>New Subscription
+            </a>
+        </div>
+    </div>
+
+    <!-- Analytics Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card-custom">
+                <div class="stat-icon bg-primary bg-opacity-10 text-primary mb-3"><i class="bi bi-lightning-charge"></i></div>
+                <small class="text-muted fw-semibold">MONTHLY BURN</small>
+                <h3 class="fw-bold mt-1" th:text="${#numbers.formatDecimal(totalMonthly, 1, 2)} + ' ৳'">0.00 ৳</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card-custom">
+                <div class="stat-icon bg-success bg-opacity-10 text-success mb-3"><i class="bi bi-check-all"></i></div>
+                <small class="text-muted fw-semibold">ACTIVE RECORDS</small>
+                <h3 class="fw-bold mt-1" th:text="${subscriptions.size()}">0</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card-custom">
+                <div class="stat-icon bg-warning bg-opacity-10 text-warning mb-3"><i class="bi bi-star"></i></div>
+                <small class="text-muted fw-semibold">PREMIUM PICK</small>
+                <h4 class="fw-bold mt-1" th:text="${mostExpensive}">Netflix</h4>
+            </div>
+        </div>
+        <div class="col-md-3" th:if="${isAdmin}">
+            <div class="card-custom bg-dark text-white">
+                <div class="stat-icon bg-white bg-opacity-20 text-white mb-3"><i class="bi bi-shield-check"></i></div>
+                <small class="opacity-75 fw-semibold">TOTAL USERS</small>
+                <h3 class="fw-bold mt-1" th:text="${totalUsers}">0</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <!-- Chart Section -->
+        <div class="col-lg-4">
+            <div class="card-custom">
+                <h5 class="fw-bold mb-4">Spendings Distribution</h5>
+                <canvas id="categoryChart"></canvas>
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="col-md-10 p-lg-5 p-3">
-            <div class="d-flex justify-content-between align-items-center mb-5">
-                <div>
-                    <h2 class="fw-bold m-0">Financial Overview</h2>
-                    <p class="text-muted">Welcome back, Nazmul!</p>
+        <!-- Upcoming Bills (Mini Timeline) -->
+        <div class="col-lg-8">
+            <div class="card-custom">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold m-0">Upcoming Payments</h5>
+                    <a href="/timeline" class="small text-decoration-none">View Full Timeline →</a>
                 </div>
-                <a href="/add" class="btn btn-primary btn-lg rounded-4 px-4 shadow-sm">
-                    <i class="bi bi-plus-lg me-2"></i>Add Subscription
-                </a>
-            </div>
-
-            <!-- Stats Row -->
-            <div class="row g-4 mb-5">
-                <div class="col-md-4">
-                    <div class="glass-card stat-card p-4">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div class="bg-primary bg-opacity-10 p-2 rounded-3 text-primary"><i class="bi bi-cash-stack h4"></i></div>
+                <div class="timeline-scroll pe-2">
+                    <!-- Loop through Sorted Timeline -->
+                    <div th:each="sub : ${subscriptions}" class="timeline-item">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="fw-bold m-0" th:text="${sub.contactName}">Name</h6>
+                                <small class="text-muted" th:text="${sub.category}"></small>
+                            </div>
+                            <div class="text-end">
+                                <div class="fw-bold" th:text="${sub.amount} + ' ৳'"></div>
+                                <small class="text-muted" th:text="${sub.billingDate}"></small>
+                            </div>
                         </div>
-                        <small class="text-muted fw-bold">TOTAL MONTHLY BURN</small>
-                        <h2 class="fw-bold" th:text="${#numbers.formatDecimal(totalMonthly, 1, 2)} + ' ৳'">0.00 ৳</h2>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="glass-card p-4 border-start border-5 border-success">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div class="bg-success bg-opacity-10 p-2 rounded-3 text-success"><i class="bi bi-check2-circle h4"></i></div>
-                        </div>
-                        <small class="text-muted fw-bold">ACTIVE SERVICES</small>
-                        <h2 class="fw-bold" th:text="${activeCount}">0</h2>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="glass-card p-4 border-start border-5 border-dark">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div class="bg-dark bg-opacity-10 p-2 rounded-3 text-dark"><i class="bi bi-star h4"></i></div>
-                        </div>
-                        <small class="text-muted fw-bold">PREMIUM SERVICE</small>
-                        <h2 class="h4 fw-bold mt-1" th:text="${mostExpensive}">None</h2>
+                    <div th:if="${subscriptions.isEmpty()}" class="text-center py-5">
+                        <i class="bi bi-inbox fs-1 text-muted"></i>
+                        <p class="text-muted mt-2">No records found</p>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="row g-4">
-                <!-- Visual Analytics -->
-                <div class="col-lg-5">
-                    <div class="glass-card p-4 h-100">
-                        <h5 class="fw-bold mb-4">Spending by Category</h5>
-                        <canvas id="categoryChart"></canvas>
-                    </div>
-                </div>
+    <!-- Main Table Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h5 class="fw-bold mb-3">Subscription Inventory</h5>
+            <table class="table table-custom align-middle">
+                <thead>
+                <tr class="text-muted small">
+                    <th>SERVICE</th>
+                    <th>MONTHLY COST</th>
+                    <th th:if="${isAdmin}">OWNER</th>
+                    <th>STATUS</th>
+                    <th class="text-end">ACTIONS</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="sub : ${subscriptions}">
+                    <td>
+                        <div class="fw-bold" th:text="${sub.contactName}">Netflix</div>
+                        <small class="text-muted" th:text="${sub.category}">Category</small>
+                    </td>
+                    <td><span class="fw-bold" th:text="${sub.amount} + ' ৳'"></span></td>
 
-                <!-- Recent Subscriptions -->
-                <div class="col-lg-7">
-                    <div class="glass-card overflow-hidden">
-                        <div class="p-4 border-bottom">
-                            <h5 class="fw-bold m-0">Subscription Records</h5>
-                        </div>
-                        <table class="table table-hover mb-0">
-                            <thead>
-                            <tr>
-                                <th class="ps-4">Service</th>
-                                <th>Monthly Cost</th>
-                                <th>Status</th>
-                                <th class="text-end pe-4">Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="sub : ${subscriptions}">
-                                <td class="ps-4 py-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="bg-light p-2 rounded-3 me-3 text-primary"><i class="bi bi-lightning-charge"></i></div>
-                                        <div>
-                                            <div class="fw-bold" th:text="${sub.contactName}">Netflix</div>
-                                            <small class="text-muted" th:text="${sub.category}">Category</small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="fw-bold" th:text="${sub.amount} + ' ৳'">0 ৳</td>
-                                <td>
-                                    <span th:if="${sub.active}" class="badge badge-active rounded-pill px-3">Active</span>
-                                    <span th:unless="${sub.active}" class="badge badge-paused rounded-pill px-3">Paused</span>
-                                </td>
-                                <td class="text-end pe-4">
-                                    <a th:href="@{/edit/{id}(id=${sub.id})}" class="btn btn-sm btn-light rounded-3 me-1"><i class="bi bi-pencil"></i></a>
-                                    <a th:href="@{/delete/{id}(id=${sub.id})}" class="btn btn-sm btn-light text-danger rounded-3" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+                    <td th:if="${isAdmin}">
+                        <span class="badge bg-light text-dark border" th:text="${sub.user.username}">User</span>
+                    </td>
+
+                    <td><span class="badge-active">Active</span></td>
+                    <td class="text-end">
+                        <a th:href="@{/edit/{id}(id=${sub.id})}" class="btn btn-sm btn-light border rounded-pill px-3">Edit</a>
+                        <a th:href="@{/delete/{id}(id=${sub.id})}" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Confirm cancellation?')">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -158,15 +198,14 @@
             datasets: [{
                 data: Object.values(categoryData),
                 backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'],
-                hoverOffset: 15,
-                borderWidth: 5,
+                borderWidth: 10,
                 borderColor: '#ffffff'
             }]
         },
         options: {
-            cutout: '75%',
+            cutout: '85%',
             plugins: {
-                legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
+                legend: { position: 'bottom', labels: { boxWidth: 10, usePointStyle: true, padding: 20 } }
             }
         }
     });

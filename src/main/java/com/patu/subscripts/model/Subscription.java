@@ -34,4 +34,8 @@ public class Subscription {
     private LocalDate billingDate;
 
     private boolean active = true;
+
+    @ManyToOne
+    @JoinColumn(name ="user_id")
+    private User user;
 }

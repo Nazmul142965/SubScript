@@ -1,6 +1,7 @@
 package com.patu.subscripts.repository;
 
 import com.patu.subscripts.model.Subscription;
+import com.patu.subscripts.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -11,6 +12,9 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Inte
     List<Subscription> findAllByOrderByBillingDateAsc();
 
     List<Subscription> findAllByActiveTrue();
+
+    List<Subscription> findAllByUser(User user);
+    
 
 
 }
