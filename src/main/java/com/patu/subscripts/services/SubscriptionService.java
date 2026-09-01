@@ -25,19 +25,33 @@ public class SubscriptionService {
         return subscriptionRepository.findAllByOrderByBillingDateAsc();
     }
 
-    public Double calculateTotalBurn() {
+    public Double calculateTotalForList(List<Subscription> subs) {
         double total = 0.0;
-        for (Subscription sub : subscriptionRepository.findAllByActiveTrue()) {
-            total += sub.getAmount();
+        for (Subscription s : subs) {
+            if (s.isActive()) {
+                total += s.getAmount();
+            }
         }
         return total;
     }
 
-    public Map<String, Double> getCategoryTotals() {
+
+    public Map<String, Double> getCategoryTotalsForList(List<Subscription> subs) {
         Map<String, Double> data = new HashMap<>();
-        for (Subscription s : subscriptionRepository.findAll()) {
-            data.put(s.getCategory(), data.getOrDefault(s.getCategory(), 0.0) + s.getAmount());
+        for (Subscription s : subs) {
+            String cat = s.getCategory();
+
+            data.put(cat, data.getOrDefault(cat, 0.0) + s.getAmount());
         }
         return data;
+    }
+
+    public String getMostExpensiveName(List<Subscription> subs) {
+        if (subs.isEmpty()) return "None";
+        Subscription max = subs.get(0);
+        for (Subscription s : subs) {
+            if (s.getAmount() > max.getAmount()) max = s;
+        }
+        return max.getContactName();
     }
 }

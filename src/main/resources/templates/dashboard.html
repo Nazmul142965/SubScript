@@ -11,52 +11,34 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        body {
-            background-color: #f3f4f6;
-            font-family: 'Inter', sans-serif;
-            color: #111827;
-        }
-
-        /* Navbar Styling */
+        body { background-color: #f3f4f6; font-family: 'Inter', sans-serif; color: #111827; }
         .navbar-custom { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 1rem 2rem; }
         .nav-btn { font-weight: 500; color: #4b5563; padding: 8px 16px; border-radius: 10px; transition: 0.2s; text-decoration: none; }
         .nav-btn:hover { background: #f9fafb; color: #6366f1; }
-
-        /* Modern Cards */
         .card-custom {
             background: #ffffff; border: none; border-radius: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-            padding: 24px; height: 100%;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); padding: 24px; height: 100%;
         }
-
         .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-
-        /* Timeline Scroll */
-        .timeline-scroll { max-height: 400px; overflow-y: auto; scrollbar-width: thin; }
+        .timeline-scroll { max-height: 400px; overflow-y: auto; }
         .timeline-item { border-left: 2px solid #e5e7eb; position: relative; padding-left: 24px; padding-bottom: 20px; }
         .timeline-item::before { content: ""; width: 12px; height: 12px; background: #6366f1; border-radius: 50%; position: absolute; left: -7px; top: 4px; }
-
-        /* Table Style */
         .table-custom { border-collapse: separate; border-spacing: 0 12px; }
         .table-custom tr { background: white; transition: 0.2s; }
-        .table-custom tr:hover { background: #f9fafb; }
         .table-custom td { padding: 16px; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9; }
-        .table-custom td:first-child { border-left: 1px solid #f1f5f9; border-radius: 16px 0 0 16px; }
-        .table-custom td:last-child { border-right: 1px solid #f1f5f9; border-radius: 0 16px 16px 0; }
-
+        .table-custom td:first-child { border-radius: 16px 0 0 16px; }
+        .table-custom td:last-child { border-radius: 0 16px 16px 0; }
         .badge-active { background: #dcfce7; color: #166534; font-weight: 600; padding: 6px 12px; border-radius: 8px; }
     </style>
 </head>
 <body>
 
-<!-- Top Navigation -->
 <nav class="navbar navbar-custom sticky-top mb-4">
     <div class="container-fluid">
         <span class="navbar-brand fw-bold text-primary fs-3"><i class="bi bi-intersect me-2"></i>SubScript</span>
         <div class="d-flex align-items-center gap-3">
             <a href="/" class="nav-btn"><i class="bi bi-house-door me-1"></i> Dashboard</a>
             <a th:if="${isAdmin}" href="/admin/users" class="nav-btn text-danger"><i class="bi bi-people me-1"></i> Users</a>
-
             <form th:action="@{/logout}" method="post" class="m-0">
                 <button type="submit" class="btn btn-light rounded-pill px-4 border">Logout</button>
             </form>
@@ -65,9 +47,9 @@
 </nav>
 
 <div class="container-fluid px-lg-5">
-    <!-- Greeting & Quick Action -->
     <div class="row mb-5 align-items-center">
         <div class="col-md-8">
+            <!-- ফিক্স ১: এখানে সরাসরি ${username} ব্যবহার করুন, কারণ 'sub' এখানে নেই -->
             <h2 class="fw-bold m-0">Hello, <span th:text="${username}">User</span>! 👋</h2>
             <p class="text-muted m-0">Here's what's happening with your subscriptions.</p>
         </div>
@@ -98,7 +80,7 @@
             <div class="card-custom">
                 <div class="stat-icon bg-warning bg-opacity-10 text-warning mb-3"><i class="bi bi-star"></i></div>
                 <small class="text-muted fw-semibold">PREMIUM PICK</small>
-                <h4 class="fw-bold mt-1" th:text="${mostExpensive}">Netflix</h4>
+                <h4 class="fw-bold mt-1" th:text="${mostExpensive}">None</h4>
             </div>
         </div>
         <div class="col-md-3" th:if="${isAdmin}">
@@ -111,7 +93,6 @@
     </div>
 
     <div class="row g-4 mb-5">
-        <!-- Chart Section -->
         <div class="col-lg-4">
             <div class="card-custom">
                 <h5 class="fw-bold mb-4">Spendings Distribution</h5>
@@ -119,7 +100,6 @@
             </div>
         </div>
 
-        <!-- Upcoming Bills (Mini Timeline) -->
         <div class="col-lg-8">
             <div class="card-custom">
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -127,7 +107,6 @@
                     <a href="/timeline" class="small text-decoration-none">View Full Timeline →</a>
                 </div>
                 <div class="timeline-scroll pe-2">
-                    <!-- Loop through Sorted Timeline -->
                     <div th:each="sub : ${subscriptions}" class="timeline-item">
                         <div class="d-flex justify-content-between">
                             <div>
@@ -140,16 +119,12 @@
                             </div>
                         </div>
                     </div>
-                    <div th:if="${subscriptions.isEmpty()}" class="text-center py-5">
-                        <i class="bi bi-inbox fs-1 text-muted"></i>
-                        <p class="text-muted mt-2">No records found</p>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Main Table Section -->
+    <!-- Main Table -->
     <div class="row mb-5">
         <div class="col-12">
             <h5 class="fw-bold mb-3">Subscription Inventory</h5>
@@ -171,14 +146,16 @@
                     </td>
                     <td><span class="fw-bold" th:text="${sub.amount} + ' ৳'"></span></td>
 
+                    <!-- ফিক্স ২: এখানে নিরাপদ এক্সেস অপারেটর '?. ' ব্যবহার করুন -->
                     <td th:if="${isAdmin}">
-                        <span class="badge bg-light text-dark border" th:text="${sub.user.username}">User</span>
+                        <span class="badge bg-light text-dark border"
+                              th:text="${sub.user?.username ?: 'No Owner'}">User</span>
                     </td>
 
                     <td><span class="badge-active">Active</span></td>
                     <td class="text-end">
                         <a th:href="@{/edit/{id}(id=${sub.id})}" class="btn btn-sm btn-light border rounded-pill px-3">Edit</a>
-                        <a th:href="@{/delete/{id}(id=${sub.id})}" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Confirm cancellation?')">Delete</a>
+                        <a th:href="@{/delete/{id}(id=${sub.id})}" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Delete?')">Delete</a>
                     </td>
                 </tr>
                 </tbody>
@@ -198,16 +175,10 @@
             datasets: [{
                 data: Object.values(categoryData),
                 backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'],
-                borderWidth: 10,
-                borderColor: '#ffffff'
+                borderWidth: 10, borderColor: '#ffffff'
             }]
         },
-        options: {
-            cutout: '85%',
-            plugins: {
-                legend: { position: 'bottom', labels: { boxWidth: 10, usePointStyle: true, padding: 20 } }
-            }
-        }
+        options: { cutout: '85%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } } } }
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

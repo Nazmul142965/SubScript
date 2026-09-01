@@ -8,12 +8,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
 
     public void saveUser(UserRegistrationDTO dto){
         if(userRepository.findByEmail(dto.getEmail()).isPresent()){
@@ -33,6 +36,20 @@ public class UserService {
         address.setCountry(dto.getCountry());
         user.setAddress(address);
 
+
+        userRepository.save(user);
+    }
+
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+
+    public void toggleBlock(int id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setBlocked(!user.isBlocked());
 
         userRepository.save(user);
     }

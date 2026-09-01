@@ -28,9 +28,8 @@ public class SubscriptionController {
         User user = userRepository.findByEmail(email).get();
 
         List<Subscription> subList;
-
         if (user.getRole().equals("ROLE_ADMIN")) {
-            subList = service.getAll();
+            subList = subscriptionRepository.findAll();
             model.addAttribute("isAdmin", true);
             model.addAttribute("totalUsers", userRepository.count());
         } else {
@@ -41,8 +40,10 @@ public class SubscriptionController {
         model.addAttribute("subscriptions", subList);
         model.addAttribute("username", user.getUsername());
 
-        //model.addAttribute("totalMonthly", service.calculateTotalForList(subList));
-        //model.addAttribute("categoryTotals", service.getCategoryTotalsForList(subList));
+
+        model.addAttribute("totalMonthly", service.calculateTotalForList(subList));
+        model.addAttribute("categoryTotals", service.getCategoryTotalsForList(subList));
+        model.addAttribute("mostExpensive", service.getMostExpensiveName(subList));
 
         return "dashboard";
     }
@@ -53,11 +54,19 @@ public class SubscriptionController {
     }
 
     @PostMapping("/save")
-    public String save(@Valid @ModelAttribute Subscription sub, BindingResult result) {
+    public String save(@Valid @ModelAttribute Subscription sub, BindingResult result, Principal principal) {
         if (result.hasErrors()) return "form";
+
+        String email = principal.getName();
+
+        User loggedInUser = userRepository.findByEmail(email).get();
+
+        sub.setUser(loggedInUser);
         service.save(sub);
+
         return "redirect:/";
-    }
+    };
+
 
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable int id, Model model) {

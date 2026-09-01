@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin | Manage Users</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body { background-color: #f3f4f6; font-family: 'Inter', sans-serif; }
+        .user-card { background: white; border-radius: 20px; border: none; overflow: hidden; }
+        .btn-block { background: #fee2e2; color: #991b1b; }
+        .btn-unblock { background: #dcfce7; color: #166534; }
+    </style>
+</head>
+<body class="p-lg-5 p-3">
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold">User Management</h2>
+            <p class="text-muted">Total users registered: [[${users.size()}]]</p>
+        </div>
+        <a href="/" class="btn btn-light border shadow-sm px-4"><i class="bi bi-arrow-left me-2"></i>Dashboard</a>
+    </div>
+
+    <div class="card user-card shadow-sm">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+            <tr>
+                <th class="ps-4">Basic Info</th>
+                <th>Role</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th class="text-end pe-4">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="u : ${users}">
+                <td class="ps-4 py-3">
+                    <div class="fw-bold" th:text="${u.username}">Username</div>
+                    <small class="text-muted" th:text="${u.email}">email@mail.com</small>
+                </td>
+                <td>
+                    <span class="badge bg-secondary-subtle text-secondary" th:text="${u.role}">ROLE</span>
+                </td>
+                <td>
+                    <span th:text="${u.address.city + ', ' + u.address.country}">Dhaka, BD</span>
+                </td>
+                <td>
+                    <span th:if="${u.blocked}" class="badge bg-danger">Suspended</span>
+                    <span th:unless="${u.blocked}" class="badge bg-success">Active</span>
+                </td>
+                <td class="text-end pe-4">
+                    <!-- ব্লক/আনব্লক বাটন -->
+                    <a th:href="@{/admin/block/{id}(id=${u.id})}"
+                       th:class="${u.blocked ? 'btn btn-sm btn-unblock' : 'btn btn-sm btn-block'}"
+                       th:text="${u.blocked ? 'Unblock Account' : 'Block User'}">
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
