@@ -46,11 +46,13 @@ public class UserService {
     }
 
 
-    public void toggleBlock(int id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-
-        user.setBlocked(!user.isBlocked());
-
+    public void toggleUserBlock(int id) {
+        User user = userRepository.findById(id).get();
+        if (user.isBlocked() == true) {
+            user.setBlocked(false);
+        } else {
+            user.setBlocked(true);
+        }
         userRepository.save(user);
     }
 

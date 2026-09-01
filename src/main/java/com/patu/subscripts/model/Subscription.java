@@ -36,6 +36,8 @@ public class Subscription {
 
     private boolean active = true;
 
+    private boolean isOneTime = false;
+
     @ManyToOne
     @JoinColumn(name ="user_id")
     private User user;

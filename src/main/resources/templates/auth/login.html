@@ -2,40 +2,100 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SubScript | Login</title>
+    <!-- Modern Font and Bootstrap -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; }
-        .login-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 400px; }
-        .btn-primary { background-color: #6366f1; border: none; border-radius: 12px; padding: 12px; }
+        body {
+            background-color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 400px;
+        }
+        .btn-primary {
+            background-color: #6366f1;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #4f46e5;
+            transform: translateY(-2px);
+        }
+        .form-control {
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+        }
+        .alert {
+            border-radius: 12px;
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
 
 <div class="login-card">
-    <h3 class="fw-bold text-center mb-4">Welcome Back</h3>
+    <div class="text-center mb-4">
+        <h3 class="fw-bold text-dark">Welcome Back</h3>
+        <p class="text-muted small">Please enter your details to sign in</p>
+    </div>
 
-    <!-- Spring Security ডিফল্টভাবে /login এ ডাটা চেক করে -->
+    <!-- ১. রেজিস্ট্রেশন সফল হলে এই মেসেজটি দেখাবে -->
+    <div th:if="${param.success}" class="alert alert-success text-center py-2 mb-3">
+        <i class="bi bi-check-circle-fill me-2"></i> Registration Successful! Please login.
+    </div>
+
+    <!-- ২. লগইন এরর (ভুল পাসওয়ার্ড বা ব্লকড ইউজার) হলে এটি দেখাবে -->
+    <div th:if="${param.error}" class="alert alert-danger text-center py-2 mb-3">
+        <!-- স্প্রিং সিকিউরিটি থেকে আসা আসল এরর মেসেজটি এখানে দেখাবে -->
+        <span th:if="${session.SPRING_SECURITY_LAST_EXCEPTION != null}"
+              th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}">
+              Invalid Username or Password
+        </span>
+        <span th:unless="${session.SPRING_SECURITY_LAST_EXCEPTION != null}">
+              Invalid Username or Password
+        </span>
+    </div>
+
+    <!-- ৩. লগআউট মেসেজ (ঐচ্ছিক) -->
+    <div th:if="${param.logout}" class="alert alert-info text-center py-2 mb-3">
+        You have been logged out.
+    </div>
+
     <form th:action="@{/login}" method="post">
-
-        <!-- এরর মেসেজ দেখানোর জন্য (যদি পাসওয়ার্ড ভুল হয়) -->
-        <div th:if="${param.error}" class="alert alert-danger text-center small">
-            Invalid username or password.
-        </div>
-
         <div class="mb-3">
-            <label class="form-label small fw-bold">Email Address</label>
-            <input type="text" name="username" class="form-control" placeholder="Enter your email" required>
+            <label class="form-label small fw-bold text-secondary">Email Address</label>
+            <!-- স্প্রিং সিকিউরিটির জন্য name অবশ্যই 'username' হতে হবে -->
+            <input type="email" name="username" class="form-control" placeholder="name@example.com" required autofocus>
         </div>
+
         <div class="mb-4">
-            <label class="form-label small fw-bold">Password</label>
+            <label class="form-label small fw-bold text-secondary">Password</label>
             <input type="password" name="password" class="form-control" placeholder="••••••••" required>
         </div>
-        <button type="submit" class="btn btn-primary w-100 fw-bold">Login</button>
+
+        <button type="submit" class="btn btn-primary w-100 mb-3">Sign In</button>
     </form>
 
-    <div class="mt-4 text-center">
-        <p class="small text-muted">Don't have an account? <a th:href="@{/register}" class="text-primary fw-bold">Register</a></p>
+    <div class="text-center mt-3">
+        <p class="small text-muted m-0">Don't have an account?</p>
+        <a th:href="@{/register}" class="text-primary fw-bold text-decoration-none">Create an Account</a>
     </div>
 </div>
 

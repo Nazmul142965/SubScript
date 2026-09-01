@@ -20,6 +20,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
+        if (user.isBlocked() == true) {
+            throw new org.springframework.security.authentication.DisabledException("Your account is blocked by Admin!");
+        }
+
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
