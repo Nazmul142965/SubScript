@@ -4,31 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <title>SubScript Pro | Dashboard</title>
-    <!-- Modern Font and Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <style>
         body { background-color: #f3f4f6; font-family: 'Inter', sans-serif; color: #111827; }
         .navbar-custom { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 1rem 2rem; }
         .nav-btn { font-weight: 500; color: #4b5563; padding: 8px 16px; border-radius: 10px; transition: 0.2s; text-decoration: none; }
         .nav-btn:hover { background: #f9fafb; color: #6366f1; }
-        .card-custom {
-            background: #ffffff; border: none; border-radius: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); padding: 24px; height: 100%;
-        }
+        .card-custom { background: #ffffff; border: none; border-radius: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); padding: 24px; height: 100%; }
         .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
         .timeline-scroll { max-height: 400px; overflow-y: auto; }
         .timeline-item { border-left: 2px solid #e5e7eb; position: relative; padding-left: 24px; padding-bottom: 20px; }
         .timeline-item::before { content: ""; width: 12px; height: 12px; background: #6366f1; border-radius: 50%; position: absolute; left: -7px; top: 4px; }
-        .table-custom { border-collapse: separate; border-spacing: 0 12px; }
+        .table-custom { border-collapse: separate; border-spacing: 0 8px; }
         .table-custom tr { background: white; transition: 0.2s; }
-        .table-custom td { padding: 16px; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9; }
-        .table-custom td:first-child { border-radius: 16px 0 0 16px; }
-        .table-custom td:last-child { border-radius: 0 16px 16px 0; }
-        .badge-active { background: #dcfce7; color: #166534; font-weight: 600; padding: 6px 12px; border-radius: 8px; }
+        .table-custom td { padding: 12px 16px; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9; }
+        .table-custom td:first-child { border-radius: 12px 0 0 12px; }
+        .table-custom td:last-child { border-radius: 0 12px 12px 0; }
+        .badge-active { background: #dcfce7; color: #166534; font-weight: 600; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; }
+        .badge-paused { background: #f1f5f9; color: #4b5563; font-weight: 600; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; }
     </style>
 </head>
 <body>
@@ -37,8 +33,8 @@
     <div class="container-fluid">
         <span class="navbar-brand fw-bold text-primary fs-3"><i class="bi bi-intersect me-2"></i>SubScript</span>
         <div class="d-flex align-items-center gap-3">
-            <a href="/" class="nav-btn"><i class="bi bi-house-door me-1"></i> Dashboard</a>
-            <a th:if="${isAdmin}" href="/admin/users" class="nav-btn text-danger"><i class="bi bi-people me-1"></i> Users</a>
+            <a th:href="@{/}" class="nav-btn"><i class="bi bi-house-door me-1"></i> Dashboard</a>
+            <a th:if="${isAdmin}" th:href="@{/admin/users}" class="nav-btn text-danger"><i class="bi bi-people me-1"></i> Users</a>
             <form th:action="@{/logout}" method="post" class="m-0">
                 <button type="submit" class="btn btn-light rounded-pill px-4 border">Logout</button>
             </form>
@@ -49,12 +45,11 @@
 <div class="container-fluid px-lg-5">
     <div class="row mb-5 align-items-center">
         <div class="col-md-8">
-            <!-- ফিক্স ১: এখানে সরাসরি ${username} ব্যবহার করুন, কারণ 'sub' এখানে নেই -->
             <h2 class="fw-bold m-0">Hello, <span th:text="${username}">User</span>! 👋</h2>
             <p class="text-muted m-0">Here's what's happening with your subscriptions.</p>
         </div>
         <div class="col-md-4 text-md-end">
-            <a href="/add" class="btn btn-primary btn-lg rounded-pill shadow-sm px-4">
+            <a th:href="@{/add}" class="btn btn-primary btn-lg rounded-pill shadow-sm px-4">
                 <i class="bi bi-plus-lg me-2"></i>New Subscription
             </a>
         </div>
@@ -65,28 +60,28 @@
         <div class="col-md-3">
             <div class="card-custom">
                 <div class="stat-icon bg-primary bg-opacity-10 text-primary mb-3"><i class="bi bi-lightning-charge"></i></div>
-                <small class="text-muted fw-semibold">MONTHLY BURN</small>
+                <small class="text-muted fw-semibold uppercase">Monthly Spend</small>
                 <h3 class="fw-bold mt-1" th:text="${#numbers.formatDecimal(totalMonthly, 1, 2)} + ' ৳'">0.00 ৳</h3>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card-custom">
                 <div class="stat-icon bg-success bg-opacity-10 text-success mb-3"><i class="bi bi-check-all"></i></div>
-                <small class="text-muted fw-semibold">ACTIVE RECORDS</small>
-                <h3 class="fw-bold mt-1" th:text="${subscriptions.size()}">0</h3>
+                <small class="text-muted fw-semibold uppercase">Active Items</small>
+                <h3 class="fw-bold mt-1" th:text="${activeCount}">0</h3>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card-custom">
                 <div class="stat-icon bg-warning bg-opacity-10 text-warning mb-3"><i class="bi bi-star"></i></div>
-                <small class="text-muted fw-semibold">PREMIUM PICK</small>
-                <h4 class="fw-bold mt-1" th:text="${mostExpensive}">None</h4>
+                <small class="text-muted fw-semibold uppercase">Premium Pick</small>
+                <h4 class="fw-bold mt-1" th:text="${mostExpensive}">Netflix</h4>
             </div>
         </div>
         <div class="col-md-3" th:if="${isAdmin}">
             <div class="card-custom bg-dark text-white">
                 <div class="stat-icon bg-white bg-opacity-20 text-white mb-3"><i class="bi bi-shield-check"></i></div>
-                <small class="opacity-75 fw-semibold">TOTAL USERS</small>
+                <small class="opacity-75 fw-semibold uppercase">System Users</small>
                 <h3 class="fw-bold mt-1" th:text="${totalUsers}">0</h3>
             </div>
         </div>
@@ -103,15 +98,18 @@
         <div class="col-lg-8">
             <div class="card-custom">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="fw-bold m-0">Upcoming Payments</h5>
-                    <a href="/timeline" class="small text-decoration-none">View Full Timeline →</a>
+                    <h5 class="fw-bold m-0">Payment Timeline</h5>
+                    <a th:href="@{/timeline}" class="btn btn-sm btn-outline-primary rounded-pill px-3">View Full Timeline →</a>
                 </div>
                 <div class="timeline-scroll pe-2">
+                    <!-- এখানে সর্ট করা টাইমলাইন দেখা যাবে -->
                     <div th:each="sub : ${subscriptions}" class="timeline-item">
-                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="fw-bold m-0" th:text="${sub.contactName}">Name</h6>
                                 <small class="text-muted" th:text="${sub.category}"></small>
+                                <!-- এককালীন কি না সেটি চেক করার লজিক -->
+                                <span th:if="${sub.contactMessage == 'OneTime'}" class="badge bg-info-subtle text-info ms-2" style="font-size: 0.6rem;">One-Time</span>
                             </div>
                             <div class="text-end">
                                 <div class="fw-bold" th:text="${sub.amount} + ' ৳'"></div>
@@ -119,12 +117,14 @@
                             </div>
                         </div>
                     </div>
+                    <div th:if="${subscriptions.isEmpty()}" class="text-center py-5">
+                        <p class="text-muted">No records found</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Main Table -->
     <div class="row mb-5">
         <div class="col-12">
             <h5 class="fw-bold mb-3">Subscription Inventory</h5>
@@ -144,18 +144,20 @@
                         <div class="fw-bold" th:text="${sub.contactName}">Netflix</div>
                         <small class="text-muted" th:text="${sub.category}">Category</small>
                     </td>
-                    <td><span class="fw-bold" th:text="${sub.amount} + ' ৳'"></span></td>
+                    <td><span class="fw-bold text-primary" th:text="${sub.amount} + ' ৳'"></span></td>
 
-                    <!-- ফিক্স ২: এখানে নিরাপদ এক্সেস অপারেটর '?. ' ব্যবহার করুন -->
                     <td th:if="${isAdmin}">
-                        <span class="badge bg-light text-dark border"
-                              th:text="${sub.user?.username ?: 'No Owner'}">User</span>
+                        <span class="badge bg-light text-dark border" th:text="${sub.user?.username ?: 'System'}">User</span>
                     </td>
 
-                    <td><span class="badge-active">Active</span></td>
+                    <td>
+                        <!-- ডাইনামিক একটিভ স্ট্যাটাস -->
+                        <span th:if="${sub.active}" class="badge-active">Active</span>
+                        <span th:unless="${sub.active}" class="badge-paused">Paused</span>
+                    </td>
                     <td class="text-end">
-                        <a th:href="@{/edit/{id}(id=${sub.id})}" class="btn btn-sm btn-light border rounded-pill px-3">Edit</a>
-                        <a th:href="@{/delete/{id}(id=${sub.id})}" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Delete?')">Delete</a>
+                        <a th:href="@{/edit/{id}(id=${sub.id})}" class="btn btn-sm btn-light border rounded-pill px-3"><i class="bi bi-pencil"></i></a>
+                        <a th:href="@{/delete/{id}(id=${sub.id})}" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a>
                     </td>
                 </tr>
                 </tbody>
@@ -178,7 +180,7 @@
                 borderWidth: 10, borderColor: '#ffffff'
             }]
         },
-        options: { cutout: '85%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } } } }
+        options: { cutout: '85%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15 } } } }
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

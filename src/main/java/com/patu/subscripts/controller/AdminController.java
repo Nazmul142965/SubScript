@@ -20,12 +20,12 @@ public class AdminController {
     @GetMapping("/users")
     public String viewUsers(Model model) {
         model.addAttribute("users", userService.getAllUsers());
-        return "admin/user_list";
+        return "admin/user_list"; 
     }
 
     @GetMapping("/block/{id}")
     public String blockUser(@PathVariable int id) {
         userService.toggleBlock(id);
-        return "redirect:/admin/users";
+        return "redirect:/admin/user_list";
     }
 }

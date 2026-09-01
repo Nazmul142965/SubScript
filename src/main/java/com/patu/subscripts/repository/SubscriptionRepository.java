@@ -14,6 +14,8 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Inte
     List<Subscription> findAllByActiveTrue();
 
     List<Subscription> findAllByUser(User user);
+
+    List<Subscription> findAllByUserOrderByBillingDateAsc(User user);
     
 
 

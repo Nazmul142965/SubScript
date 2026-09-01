@@ -43,14 +43,26 @@
                         </div>
                     </div>
 
+                    <!-- ১. পেছনের তারিখ আটকানোর জন্য th:attr="min=..." ব্যবহার করা হয়েছে -->
                     <div class="mb-3">
                         <label class="form-label fw-bold">NEXT BILLING DATE</label>
-                        <input type="date" th:field="*{billingDate}" class="form-control" required>
+                        <input type="date" th:field="*{billingDate}"
+                               th:attr="min=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"
+                               class="form-control" required>
+                    </div>
+
+                    <!-- ২. ওয়ান টাইম পারচেজ অপশন -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">PURCHASE TYPE</label>
+                        <select th:field="*{recurring}" class="form-select">
+                            <option th:value="true">Monthly Subscription (Recurring)</option>
+                            <option th:value="false">One-time Purchase (Fixed)</option>
+                        </select>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-bold">NOTES / MESSAGE</label>
-                        <textarea th:field="*{contactMessage}" class="form-control" rows="2" placeholder="Optional notes..."></textarea>
+                        <input type="date" th:field="*{billingDate}" th:attr="min=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" class="form-control" required>
                     </div>
 
                     <div class="form-check form-switch mb-4">

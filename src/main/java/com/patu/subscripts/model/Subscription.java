@@ -30,6 +30,7 @@ public class Subscription {
     private String category;
 
     @NotNull(message = "Date is required")
+    @FutureOrPresent(message = "Date must be in the future")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate billingDate;
 

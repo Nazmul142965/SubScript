@@ -25,11 +25,13 @@ public class SubscriptionService {
         return subscriptionRepository.findAllByOrderByBillingDateAsc();
     }
 
+
     public Double calculateTotalForList(List<Subscription> subs) {
         double total = 0.0;
-        for (Subscription s : subs) {
-            if (s.isActive()) {
-                total += s.getAmount();
+        for (int i = 0; i < subs.size(); i++) {
+            Subscription s = subs.get(i);
+            if (s.isActive() == true) {
+                total = total + s.getAmount();
             }
         }
         return total;
@@ -40,18 +42,29 @@ public class SubscriptionService {
         Map<String, Double> data = new HashMap<>();
         for (Subscription s : subs) {
             String cat = s.getCategory();
+            double price = s.getAmount();
 
-            data.put(cat, data.getOrDefault(cat, 0.0) + s.getAmount());
+
+            if (data.containsKey(cat)) {
+                data.put(cat, data.get(cat) + price);
+            } else {
+                data.put(cat, price);
+            }
         }
         return data;
     }
 
+
     public String getMostExpensiveName(List<Subscription> subs) {
-        if (subs.isEmpty()) return "None";
-        Subscription max = subs.get(0);
-        for (Subscription s : subs) {
-            if (s.getAmount() > max.getAmount()) max = s;
+        if (subs.isEmpty()) {
+            return "None";
         }
-        return max.getContactName();
+        Subscription expensive = subs.get(0);
+        for (Subscription s : subs) {
+            if (s.getAmount() > expensive.getAmount()) {
+                expensive = s;
+            }
+        }
+        return expensive.getContactName();
     }
 }

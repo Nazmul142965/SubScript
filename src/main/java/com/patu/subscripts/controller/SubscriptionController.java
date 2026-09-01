@@ -80,8 +80,10 @@ public class SubscriptionController {
         return "redirect:/";
     }
     @GetMapping("/timeline")
-    public String timeline(Model model) {
-        model.addAttribute("subscriptions", service.getAll());
+    public String timeline(Model model, Principal principal) {
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email).get();
+        model.addAttribute("subscriptionsSorted", subscriptionRepository.findAllByUserOrderByBillingDateAsc(user));
         return "timeline";
     }
 
