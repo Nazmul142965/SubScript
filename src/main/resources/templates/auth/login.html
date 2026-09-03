@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SubScript | Login</title>
-    <!-- Modern Font and Bootstrap -->
+    <title>SubScript Pro | Login</title>
+    <!-- Modern Font and Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <style>
         body {
             background-color: #f3f4f6;
@@ -14,8 +16,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            padding: 20px;
         }
         .login-card {
             background: white;
@@ -23,7 +26,7 @@
             border-radius: 24px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.05);
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
         }
         .btn-primary {
             background-color: #6366f1;
@@ -31,39 +34,44 @@
             border-radius: 12px;
             padding: 12px;
             font-weight: 600;
-            transition: 0.3s;
         }
-        .btn-primary:hover {
-            background-color: #4f46e5;
-            transform: translateY(-2px);
+        .form-control { border-radius: 10px; padding: 12px; }
+
+        /* Quick Login Box Styling */
+        .quick-login-box {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f9fafb;
+            border: 1px dashed #d1d5db;
+            border-radius: 16px;
         }
-        .form-control {
+        .login-option {
+            cursor: pointer;
+            padding: 10px;
             border-radius: 10px;
-            padding: 12px;
-            border: 1px solid #e5e7eb;
+            transition: 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .alert {
-            border-radius: 12px;
-            font-size: 0.85rem;
-        }
+        .login-option:hover { background-color: #eff6ff; border: 1px solid #6366f1; }
     </style>
 </head>
 <body>
 
 <div class="login-card">
     <div class="text-center mb-4">
-        <h3 class="fw-bold text-dark">Welcome Back</h3>
-        <p class="text-muted small">Please enter your details to sign in</p>
+        <h3 class="fw-bold">SubScript <span class="text-primary">Pro</span></h3>
+        <p class="text-muted small">Sign in to manage your bills</p>
     </div>
 
-    <!-- ১. রেজিস্ট্রেশন সফল হলে এই মেসেজটি দেখাবে -->
-    <div th:if="${param.success}" class="alert alert-success text-center py-2 mb-3">
-        <i class="bi bi-check-circle-fill me-2"></i> Registration Successful! Please login.
+    <!-- রেজিস্ট্রেশন সাকসেস মেসেজ -->
+    <div th:if="${param.success}" class="alert alert-success text-center py-2 mb-3 small">
+        Registration Successful! Please login.
     </div>
 
-    <!-- ২. লগইন এরর (ভুল পাসওয়ার্ড বা ব্লকড ইউজার) হলে এটি দেখাবে -->
-    <div th:if="${param.error}" class="alert alert-danger text-center py-2 mb-3">
-        <!-- স্প্রিং সিকিউরিটি থেকে আসা আসল এরর মেসেজটি এখানে দেখাবে -->
+    <!-- লগইন এরর মেসেজ -->
+    <div th:if="${param.error}" class="alert alert-danger text-center py-2 mb-3 small">
         <span th:if="${session.SPRING_SECURITY_LAST_EXCEPTION != null}"
               th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}">
               Invalid Username or Password
@@ -73,53 +81,58 @@
         </span>
     </div>
 
-    <!-- ৩. লগআউট মেসেজ (ঐচ্ছিক) -->
-    <div th:if="${param.logout}" class="alert alert-info text-center py-2 mb-3">
-        You have been logged out.
-    </div>
-
     <form th:action="@{/login}" method="post">
         <div class="mb-3">
             <label class="form-label small fw-bold text-secondary">Email Address</label>
-            <!-- স্প্রিং সিকিউরিটির জন্য name অবশ্যই 'username' হতে হবে -->
-            <input type="email" name="username" class="form-control" placeholder="name@example.com" required autofocus>
+            <!-- ID দেওয়া হয়েছে যাতে অটো-ফিল কাজ করে -->
+            <input type="email" id="emailField" name="username" class="form-control" placeholder="name@example.com" required>
         </div>
 
         <div class="mb-4">
             <label class="form-label small fw-bold text-secondary">Password</label>
-            <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+            <!-- ID দেওয়া হয়েছে যাতে অটো-ফিল কাজ করে -->
+            <input type="password" id="passField" name="password" class="form-control" placeholder="••••••••" required>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100 mb-3">Sign In</button>
+        <button type="submit" class="btn btn-primary w-100 mb-3 shadow-sm">Sign In</button>
     </form>
 
-    <div class="text-center mt-3">
-        <p class="small text-muted m-0">Don't have an account?</p>
-        <a th:href="@{/register}" class="text-primary fw-bold text-decoration-none">Create an Account</a>
-    </div>
-    <!-- টেস্ট ক্রেডেনশিয়াল বক্স -->
-    <div class="mt-4 p-3 rounded-4 border bg-light shadow-sm">
-        <h6 class="fw-bold text-muted small mb-3"><i class="bi bi-info-circle me-1"></i> Demo Credentials</h6>
+    <!-- অটো-ফিল বাটন সেকশন -->
+    <div class="quick-login-box">
+        <h6 class="fw-bold text-muted small mb-3"><i class="bi bi-magic me-2"></i>Quick Login (Click to fill)</h6>
 
-        <!-- এডমিন ক্রেডেনশিয়াল -->
-        <div class="d-flex justify-content-between align-items-center mb-2">
+        <!-- এডমিন ক্রেডেনশিয়াল -->
+        <div class="login-option mb-2" onclick="fillLogin('admin@gmail.com', 'admin123')">
             <div class="small">
                 <span class="badge bg-dark">ADMIN</span>
                 <span class="text-secondary ms-1">admin@gmail.com</span>
             </div>
-            <code class="text-primary small">admin123</code>
+            <i class="bi bi-arrow-right-short text-primary fs-4"></i>
         </div>
 
-        <!-- ইউজার ক্রেডেনশিয়াল -->
-        <div class="d-flex justify-content-between align-items-center">
+        <!-- ইউজার ক্রেডেনশিয়াল -->
+        <div class="login-option" onclick="fillLogin('nazmul@gmail.com', 'nazmul123')">
             <div class="small">
                 <span class="badge bg-secondary">USER</span>
                 <span class="text-secondary ms-1">nazmul@gmail.com</span>
             </div>
-            <code class="text-primary small">nazmul123</code>
+            <i class="bi bi-arrow-right-short text-secondary fs-4"></i>
         </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <p class="small text-muted">Don't have an account? <a th:href="@{/register}" class="text-primary fw-bold text-decoration-none">Register</a></p>
     </div>
 </div>
 
+<!-- বাটন ক্লিক করলে বক্স ফিলাপ হওয়ার লজিক -->
+<script>
+    function fillLogin(email, pass) {
+        document.getElementById('emailField').value = email;
+        document.getElementById('passField').value = pass;
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
