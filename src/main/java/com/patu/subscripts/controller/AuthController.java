@@ -27,15 +27,27 @@ public class AuthController {
         model.addAttribute("userDto", new UserRegistrationDTO());
         return "auth/register";
     }
+    @GetMapping("/forgot-password")
+    public String forgotPassword(){
+        return "auth/forgot-password";
+    }
 
     @PostMapping("/register")
-    public String registerUser(@Valid @ModelAttribute("userdto") UserRegistrationDTO dto, BindingResult result)
-    {
-        if(result.hasErrors()) {
+    public String handleRegistration(@Valid @ModelAttribute("userDto") UserRegistrationDTO userDto,
+                                     BindingResult result, Model model) {
+        if (result.hasErrors()) {
             return "auth/register";
         }
-        userService.saveUser(dto);
-        return "redirect:/login";
+
+        try {
+            userService.saveUser(userDto);
+            return "redirect:/login?success";
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+            return "auth/register";
+        }
     }
+
+
 
 }
