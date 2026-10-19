@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">SubScript dashboard preview</title>
+  <desc id="desc">Illustration of the subscription dashboard with spending cards, a category chart, upcoming bills, and a subscription table.</desc>
+  <rect width="1200" height="720" fill="#f3f4f6"/>
+  <rect width="1200" height="74" fill="#fff"/>
+  <path d="M0 73h1200" stroke="#e5e7eb"/>
+  <text x="48" y="48" fill="#4f46e5" font-family="Arial,sans-serif" font-size="29" font-weight="700">◈ SubScript</text>
+  <text x="875" y="45" fill="#4b5563" font-family="Arial,sans-serif" font-size="17">Dashboard</text>
+  <text x="1002" y="45" fill="#4b5563" font-family="Arial,sans-serif" font-size="17">Logout</text>
+  <text x="48" y="132" fill="#111827" font-family="Arial,sans-serif" font-size="31" font-weight="700">Hello, User!</text>
+  <text x="48" y="162" fill="#6b7280" font-family="Arial,sans-serif" font-size="16">Here's what's happening with your subscriptions.</text>
+  <rect x="941" y="111" width="211" height="48" rx="24" fill="#6366f1"/>
+  <text x="966" y="141" fill="#fff" font-family="Arial,sans-serif" font-size="16" font-weight="700">+ New Subscription</text>
+  <g fill="#fff">
+    <rect x="48" y="195" width="345" height="148" rx="22"/>
+    <rect x="411" y="195" width="345" height="148" rx="22"/>
+    <rect x="774" y="195" width="378" height="148" rx="22"/>
+    <rect x="48" y="361" width="440" height="251" rx="22"/>
+    <rect x="506" y="361" width="646" height="251" rx="22"/>
+    <rect x="48" y="630" width="1104" height="72" rx="22"/>
+  </g>
+  <g font-family="Arial,sans-serif" fill="#6b7280" font-size="15" font-weight="700">
+    <text x="76" y="245">MONTHLY SPEND</text><text x="439" y="245">ACTIVE ITEMS</text><text x="802" y="245">PREMIUM PICK</text>
+  </g>
+  <g font-family="Arial,sans-serif" fill="#111827" font-size="36" font-weight="700">
+    <text x="76" y="302">৳ 1,449.00</text><text x="439" y="302">3</text><text x="802" y="302">Netflix</text>
+  </g>
+  <text x="76" y="401" fill="#111827" font-family="Arial,sans-serif" font-size="20" font-weight="700">Spendings Distribution</text>
+  <circle cx="239" cy="500" r="77" fill="none" stroke="#e5e7eb" stroke-width="30"/>
+  <circle cx="239" cy="500" r="77" fill="none" stroke="#6366f1" stroke-width="30" stroke-dasharray="240 484" transform="rotate(-90 239 500)"/>
+  <circle cx="239" cy="500" r="77" fill="none" stroke="#10b981" stroke-width="30" stroke-dasharray="130 484" stroke-dashoffset="-240" transform="rotate(-90 239 500)"/>
+  <circle cx="239" cy="500" r="77" fill="none" stroke="#f59e0b" stroke-width="30" stroke-dasharray="94 484" stroke-dashoffset="-370" transform="rotate(-90 239 500)"/>
+  <text x="534" y="401" fill="#111827" font-family="Arial,sans-serif" font-size="20" font-weight="700">Upcoming Bills</text>
+  <g font-family="Arial,sans-serif" font-size="17">
+    <text x="550" y="456" fill="#111827" font-weight="700">Netflix</text><text x="1020" y="456" fill="#111827" font-weight="700">৳ 699</text>
+    <text x="550" y="484" fill="#6b7280">Streaming · 25 October</text>
+    <text x="550" y="541" fill="#111827" font-weight="700">Spotify</text><text x="1020" y="541" fill="#111827" font-weight="700">৳ 250</text>
+    <text x="550" y="569" fill="#6b7280">Streaming · 30 October</text>
+  </g>
+  <path d="M535 503h588" stroke="#e5e7eb"/>
+  <text x="76" y="673" fill="#111827" font-family="Arial,sans-serif" font-size="20" font-weight="700">All Subscriptions</text>
+  <text x="849" y="673" fill="#6b7280" font-family="Arial,sans-serif" font-size="15">Manage your records below</text>
+</svg>
